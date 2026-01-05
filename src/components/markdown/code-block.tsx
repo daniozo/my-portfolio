@@ -63,10 +63,13 @@ export const CodeBlock = React.memo(function CodeBlock({ language, children }: C
           padding: '1rem',
           borderRadius: 0,
           background: 'transparent',
+          fontSize: '0.875rem',
+          lineHeight: '1.5',
         }}
         codeTagProps={{
           style: {
             background: 'transparent',
+            fontSize: 'inherit', // Hérite de la taille définie dans customStyle
           }
         }}
       >

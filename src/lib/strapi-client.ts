@@ -1,23 +1,35 @@
 import { strapi } from '@strapi/client';
 import type { APIError, StrapiResponse } from '@/types';
-import { getAPIConfig, logger } from '@/lib/config';
+import { getAPIConfig, isAPIConfigured, logger } from '@/lib/config';
 
 class StrapiClient {
   private client: any;
   private config: ReturnType<typeof getAPIConfig>;
+  private isConfigured: boolean;
 
   constructor() {
     this.config = getAPIConfig();
-    this.client = strapi({
-      baseURL: this.config.baseURL,
-      auth: this.config.token,
-    });
+    this.isConfigured = isAPIConfigured();
+
+    if (this.isConfigured && this.config) {
+      this.client = strapi({
+        baseURL: this.config.baseURL,
+        auth: this.config.token,
+      });
+    } else {
+      this.client = null;
+    }
   }
 
   /**
    * Vérifie si l'API est accessible
    */
   async isHealthy(): Promise<boolean> {
+    // Si pas de configuration, on retourne false immédiatement
+    if (!this.isConfigured || !this.config) {
+      return false;
+    }
+
     try {
       // Utilise l'endpoint officiel de health check de Strapi (en dehors de /api)
       const response = await fetch(`${this.config.baseURL.replace('/api', '')}/_health`, {
@@ -37,8 +49,13 @@ class StrapiClient {
    */
   async executeRequest<T>(
     operation: () => Promise<T>,
-    retries: number = this.config.retries || 3
+    retries: number = this.config?.retries || 3
   ): Promise<T> {
+    // Si pas de configuration, on lance une erreur claire
+    if (!this.isConfigured || !this.config) {
+      throw this.handleError(new Error('API not configured'));
+    }
+
     let lastError: Error | null = null;
 
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -69,7 +86,7 @@ class StrapiClient {
    */
   private createTimeoutPromise(): Promise<never> {
     return new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Request timeout')), this.config.timeout);
+      setTimeout(() => reject(new Error('Request timeout')), this.config?.timeout || 5000);
     });
   }
 
@@ -85,6 +102,15 @@ class StrapiClient {
    */
   private handleError(error: Error): APIError {
     logger.error('Strapi client error:', error);
+
+    if (error.message.includes('not configured') || error.message.includes('API not configured')) {
+      return {
+        status: 503,
+        name: 'NotConfiguredError',
+        message: 'Le serveur de contenu n\'est pas configuré',
+        details: { originalError: error.message },
+      };
+    }
 
     if (error.message.includes('timeout')) {
       return {
@@ -196,13 +222,13 @@ class StrapiClient {
               params.append('filters[$or][2][tags][name][$containsi]', query);
             }
 
-            const url = `${this.config.baseURL}/${collectionName}?${params.toString()}`;
+            const url = `${this.config!.baseURL}/${collectionName}?${params.toString()}`;
 
             logger.info(`StrapiClient: Fetching URL:`, url);
 
             const response = await fetch(url, {
               headers: {
-                Authorization: `Bearer ${this.config.token}`,
+                Authorization: `Bearer ${this.config!.token}`,
               },
             });
 

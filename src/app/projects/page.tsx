@@ -6,9 +6,6 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import dataService from '@/lib/data';
 import { type Project } from '@/types';
 
-// ISR: Régénère la page toutes les heures
-export const revalidate = 3600;
-
 export const metadata: Metadata = {
   title: 'Projets',
   description: 'Découvrez mes projets et contributions récents.',
@@ -33,7 +30,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
       <div className="w-full mx-auto px-8 max-w-7xl py-6 lg:py-10">
         <ErrorDisplay
           title="Serveur indisponible"
-          message="Le serveur de contenu est actuellement injoignable. Les projets seront disponibles dès que la connexion sera rétablie."
+          message="Le serveur est actuellement injoignable. Les projets seront disponibles dès que la connexion sera rétablie."
         />
         <SiteFooter />
       </div>

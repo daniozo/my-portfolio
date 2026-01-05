@@ -15,9 +15,6 @@ import type { GalleryItem, ProjectLink, Project } from '@/types';
 import dataService from '@/lib/data';
 import { formatProjectDateRange } from '@/lib/utils';
 
-// ISR: Régénère la page toutes les heures
-export const revalidate = 3600;
-
 interface ProjectPageProps {
   params: Promise<{
     slug: string;
@@ -135,7 +132,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <div className="container max-w-4xl px-4 py-12">
         <ErrorDisplay
           title="Serveur indisponible"
-          message="Le serveur de contenu est actuellement injoignable. Le projet sera à nouveau disponible dès que la connexion sera rétablie."
+          message="Le serveur est actuellement injoignable. Le projet sera à nouveau disponible dès que la connexion sera rétablie."
         />
       </div>
     );

@@ -14,9 +14,6 @@ import dataService from '@/lib/data';
 import { formatDateFr } from '@/lib/utils';
 import type { Article } from '@/types';
 
-// ISR: Régénère la page toutes les heures
-export const revalidate = 3600;
-
 interface ArticlePageProps {
   params: Promise<{
     slug: string;
@@ -81,7 +78,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <div className="container max-w-2xl xl:max-w-4xl px-4 py-12">
         <ErrorDisplay
           title="Serveur indisponible"
-          message="Le serveur de contenu est actuellement injoignable. L'article sera à nouveau disponible dès que la connexion sera rétablie."
+          message="Le serveur est actuellement injoignable. L'article sera à nouveau disponible dès que la connexion sera rétablie."
         />
       </div>
     );

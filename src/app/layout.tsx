@@ -9,9 +9,6 @@ import dataService from '@/lib/data';
 import { GlobalDataProvider } from '@/contexts/global-data-context';
 import './globals.css';
 
-// ISR: Régénère le layout toutes les heures
-export const revalidate = 3600;
-
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -36,10 +33,23 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [globalSettings, socialLinks] = await Promise.all([
-    dataService.static.getGlobalSettings(),
-    dataService.static.getSocialLinks(),
-  ]);
+  // Récupérer les données avec gestion d'erreur pour permettre le démarrage sans backend
+  let globalSettings = null;
+  let socialLinks = null;
+
+  try {
+    const isStrapiHealthy = await dataService.isHealthy();
+
+    if (isStrapiHealthy) {
+      [globalSettings, socialLinks] = await Promise.all([
+        dataService.static.getGlobalSettings(),
+        dataService.static.getSocialLinks(),
+      ]);
+    }
+  } catch (error) {
+    console.warn('Layout: Backend not available, using fallback values');
+  }
+
   const globalData = { globalSettings, socialLinks };
 
   return (

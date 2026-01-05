@@ -9,14 +9,24 @@ const DEFAULT_CONFIG: Partial<APIConfig> = {
 };
 
 /**
- * Récupère la configuration de l'API depuis les variables d'environnement
+ * Vérifie si l'API backend est configurée
  */
-export function getAPIConfig(): APIConfig {
+export function isAPIConfigured(): boolean {
+  const baseURL = process.env.NEXT_PUBLIC_API_URL;
+  return Boolean(baseURL && baseURL.trim() !== '');
+}
+
+/**
+ * Récupère la configuration de l'API depuis les variables d'environnement
+ * Retourne null si l'API n'est pas configurée
+ */
+export function getAPIConfig(): APIConfig | null {
   const baseURL = process.env.NEXT_PUBLIC_API_URL;
   const token = process.env.STRAPI_API_TOKEN;
 
-  if (!baseURL) {
-    throw new Error('NEXT_PUBLIC_API_URL is required');
+  // Si pas d'URL configurée, on retourne null (mode sans backend)
+  if (!baseURL || baseURL.trim() === '') {
+    return null;
   }
 
   return {

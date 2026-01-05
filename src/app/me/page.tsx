@@ -8,9 +8,6 @@ import { SkillsSection } from '@/components/cv/skills-section';
 import Image from 'next/image';
 import dataService from '@/lib/data';
 
-// ISR: Régénère la page toutes les heures
-export const revalidate = 3600;
-
 const AboutPage = async () => {
   // Vérifier la santé de Strapi avant de charger
   const isStrapiHealthy = await dataService.isHealthy();
@@ -20,7 +17,7 @@ const AboutPage = async () => {
       <div className="w-full mx-auto px-8 max-w-7xl py-8 lg:py-12">
         <ErrorDisplay
           title="Serveur indisponible"
-          message="Le serveur de contenu est actuellement injoignable. Les informations seront à nouveau disponibles dès que la connexion sera rétablie."
+          message="Le serveur est actuellement injoignable. Les informations seront à nouveau disponibles dès que la connexion sera rétablie."
         />
       </div>
     );

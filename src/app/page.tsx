@@ -6,9 +6,6 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import dataService from '@/lib/data';
 import type { Article } from '@/types';
 
-// ISR: Régénère la page toutes les heures
-export const revalidate = 3600;
-
 const ARTICLES_PER_PAGE = 15;
 
 interface HomeProps {
@@ -28,7 +25,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <div className="w-full mx-auto px-8 max-w-7xl py-6 lg:py-10">
         <ErrorDisplay
           title="Serveur indisponible"
-          message="Le serveur de contenu est actuellement injoignable. Les articles seront disponibles dès que la connexion sera rétablie."
+          message="Le serveur est actuellement injoignable. Les articles seront disponibles dès que la connexion sera rétablie."
         />
         <SiteFooter />
       </div>

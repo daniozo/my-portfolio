@@ -9,9 +9,6 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import dataService from '@/lib/data';
 import { formatDateFr } from '@/lib/utils';
 
-// ISR: Régénère la page toutes les heures
-export const revalidate = 3600;
-
 export const metadata: Metadata = {
   title: 'Mentions légales',
   description: 'Mentions légales et informations juridiques du site.',
@@ -26,7 +23,7 @@ export default async function LegalPage() {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <ErrorDisplay
           title="Serveur indisponible"
-          message="Le serveur de contenu est actuellement injoignable. Les mentions légales seront à nouveau disponibles dès que la connexion sera rétablie."
+          message="Le serveur est actuellement injoignable. Les mentions légales seront à nouveau disponibles dès que la connexion sera rétablie."
         />
         <SiteFooter />
       </div>
