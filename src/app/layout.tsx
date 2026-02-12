@@ -46,7 +46,7 @@ export default async function RootLayout({
         dataService.static.getSocialLinks(),
       ]);
     }
-  } catch (error) {
+  } catch (_error) {
     console.warn('Layout: Backend not available, using fallback values');
   }
 
